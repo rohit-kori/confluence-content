@@ -1,19 +1,33 @@
-import Link from "next/link";
+// app/page.tsx
+import { redirect } from "next/navigation"; // adjust the import if needed
+import { getNavLinks } from "../layout.config";
 
-export default function HomePage() {
-  return (
-    <main className="flex flex-1 flex-col justify-center text-center">
-      <h1 className="mb-4 text-2xl font-bold">Confluence Content</h1>
-      <p className="text-fd-muted-foreground">
-        You can open{" "}
-        <Link
-          href="/confluence"
-          className="text-fd-foreground font-semibold underline"
-        >
-          /confluence
-        </Link>{" "}
-        and see the documentation.
-      </p>
-    </main>
-  );
+export default async function HomePage() {
+  const links = await getNavLinks();
+
+  // Find the first valid link
+  const firstLink = findFirstLink(links);
+
+  if (!firstLink?.url) {
+    return (
+      <main className="flex flex-1 flex-col justify-center text-center">
+        <h1 className="text-xl font-bold mb-4">No Confluence Content Found</h1>
+      </main>
+    );
+  }
+
+  redirect(firstLink.url);
+}
+
+// Recursively finds the first link in the nested menu structure
+function findFirstLink(links: any[]): any {
+  for (const link of links) {
+    if (link.type === "link") {
+      return link;
+    } else if (link.items?.length) {
+      const nested = findFirstLink(link.items);
+      if (nested) return nested;
+    }
+  }
+  return null;
 }

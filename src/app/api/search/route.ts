@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getConfluenceSearchResults } from "../../../lib/confluence-search"; // Create this
+import { getConfluenceSearchResults } from "../../../lib/confluence-search";
 
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("query");
@@ -12,9 +12,19 @@ export async function GET(req: NextRequest) {
 
   try {
     const results = await getConfluenceSearchResults(query);
-    return results;
+    return new Response(JSON.stringify(results), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (err: any) {
     console.error("Failed to search Confluence:", err);
     return new Response(JSON.stringify([]), { status: 200 });
   }
 }
+
+// import { source } from "@/lib/source";
+// import { createFromSource } from "fumadocs-core/search/server";
+
+// export const { GET } = createFromSource(source);

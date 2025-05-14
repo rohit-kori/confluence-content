@@ -5,7 +5,6 @@ const token = process.env.CONFLUENCE_TOKEN!;
 const auth = Buffer.from(`${username}:${token}`).toString("base64");
 
 export async function getConfluenceSearchResults(query: string) {
-  if (!query) return Response.json([]);
   const searchUrl = `${baseUrl}/wiki/rest/api/search?cql=space="${spaceKey}" AND type=page AND text~"${query}"&limit=10`;
 
   const res = await fetch(searchUrl, {

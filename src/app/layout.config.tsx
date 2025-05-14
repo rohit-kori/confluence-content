@@ -5,6 +5,7 @@ const spaceKey = process.env.CONFLUENCE_SPACE_KEY!;
 const username = process.env.CONFLUENCE_USERNAME!;
 const token = process.env.CONFLUENCE_TOKEN!;
 const auth = Buffer.from(`${username}:${token}`).toString("base64");
+import SearchButton from "./components/search-button";
 
 // Fetches all top-level pages in the Confluence space.
 async function getTopLevelPages(): Promise<any[]> {
@@ -113,7 +114,14 @@ export async function getBaseLayoutOptions(): Promise<BaseLayoutProps> {
 
   return {
     nav: {
-      title: <>Confluence Content</>,
+      title: (
+        <div className="flex items-center gap-2">
+          <span>Confluence Content</span>
+          <div className="mx-5">
+            <SearchButton />
+          </div>
+        </div>
+      ),
     },
     links,
   };
